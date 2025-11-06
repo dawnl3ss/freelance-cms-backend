@@ -20,7 +20,7 @@ class ControllerGateway {
             try {
                 $reflection = new ReflectionClass($class_name);
             } catch (ReflectionException $e){
-                echo "[ControllerGateway] - ERROR - Cannot reflect class $className: " . $e->getMessage();
+                echo "[ControllerGateway] - ERROR - Cannot reflect class $class_name: " . $e->getMessage();
                 continue;
             }
 
