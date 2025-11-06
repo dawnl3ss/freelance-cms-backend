@@ -10,5 +10,4 @@ spl_autoload_register(function ($class) {
         echo "[Autoload] - ERROR - class $class does not exist ";
         die();
     }
-
 });
