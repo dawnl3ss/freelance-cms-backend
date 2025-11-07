@@ -9,4 +9,4 @@ Goal : make a simple, lightweight and efficient PHP CMS to avoid heavy and usele
 
 -> Documented creation. The goal is to write every thing that i am thinking and to provide pictures of the webapp creation/design process.
 
-<img src="board1.jpeg">
+<img src=".github/board1.jpeg">

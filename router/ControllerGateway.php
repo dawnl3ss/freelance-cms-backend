@@ -2,8 +2,8 @@
 
 namespace router;
 
-use ReflectionClass;
-use ReflectionException;
+use \ReflectionClass;
+use \ReflectionException;
 
 class ControllerGateway {
 
