@@ -5,12 +5,12 @@ namespace router;
 use \ReflectionClass;
 use \ReflectionException;
 
-class ControllerGateway {
+final class ControllerGateway {
 
     /**
      * Router => Controller Gateway
      */
-    public function _link(): void {
+    public function _link() : void {
         $directory = __DIR__ . '/../app/controller/*.php';
         $controllerFiles = glob($directory);
 

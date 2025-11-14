@@ -12,9 +12,5 @@ class AppController {
      */
     public function index(){
         echo "Homepage demo for automated Router/Controller";
-
-        echo (new JsonResponse(
-            ["test" => "oui"]
-        ))->_add("key", "val")->_encode();
     }
 }
