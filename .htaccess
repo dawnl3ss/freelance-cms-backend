@@ -3,12 +3,3 @@ RewriteCond %{REQUEST_FILENAME} !-f
 RewriteRule . index.php [L]
 
 DirectorySlash Off
-
-<FilesMatch "\.(json|sql)$">
-    Order allow,deny
-    Deny from all
-</FilesMatch>
-
-RewriteCond %{REQUEST_FILENAME} \.php$
-RewriteCond %{REQUEST_URI} !/index\.php$
-RewriteRule ^ - [R=404,L]

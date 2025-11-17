@@ -16,9 +16,9 @@ class JsonResponse {
      *
      * @param $value
      *
-     * @return void
+     * @return JsonResponse
      */
-    public function _add($key, $value) {
+    public function _add($key, $value) : self {
         $this->_json[$key] = $value;
         return $this;
     }

@@ -2,7 +2,7 @@
 
 namespace config;
 
-final class ProjectConfig implements \config\Configable {
+final class ProjectConfig implements Configable {
 
     const string PROJECT_NAME = 'Project Name';
 

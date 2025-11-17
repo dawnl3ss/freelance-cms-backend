@@ -1,8 +1,8 @@
 <?php
 
-namespace database\drivers;
+namespace modules\database\drivers;
 
-enum DriverEnum: string {
+enum DatabaseDriverEnum: string {
 
     case MYSQL = 'mysql';
     case SQLITE = 'sqlite';
