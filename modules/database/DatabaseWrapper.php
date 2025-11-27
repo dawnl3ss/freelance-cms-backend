@@ -16,7 +16,7 @@ class DatabaseWrapper {
 
     /** @var DatabaseDriver $_driver */
     private DatabaseDriver $_driver;
-    
+
     public function __construct(string $database){
         $this->_driver = $this->_getDriver();
         $this->_database = $database;
@@ -32,22 +32,23 @@ class DatabaseWrapper {
      *
      * @return mixed
      */
-    public function _select(string $table, string $content, array $assoc = []){
+    public function _select(string $table, string $content, array $assoc = []) : mixed {
         $query = "SELECT {$content} FROM {$table}";
 
-        if (count(array_keys($assoc)) > 1){
-            $query .= " WHERE ";
-            $i = 1;
+        if (!empty($assoc)){
+            $conditions = [];
 
-            foreach (array_keys($assoc) as $key){
-                $query .= "{$key} = :{$key}";
-                if ($i > 1) $query .= " AND ";
-                $i++;
+            foreach ($assoc as $key => $value){
+                $conditions[] = "{$key} = :{$key}";
             }
+
+            $query .= " WHERE " . implode(" AND ", $conditions);
         }
+
 
         return $this->_driver->_database($this->_database)->_query($query, $assoc);
     }
+
 
 
     /**
@@ -73,8 +74,8 @@ class DatabaseWrapper {
      *
      * @return bool
      */
-    public function _exist($table, string $content, array $assoc = []){
-        return $this->_select($table, $content, $assoc) != [];
+    public function _exist($table, array $assoc = []){
+        return $this->_select($table, '*', $assoc) != [];
     }
 
 

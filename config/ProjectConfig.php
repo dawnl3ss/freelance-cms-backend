@@ -10,6 +10,8 @@ final class ProjectConfig implements Configable {
     const string DATABASE_USERNAME = 'root';
     const string DATABASE_PASSWORD = 'root';
 
+    const string AUTH_DATABASE_GATEWAY = "";
+
     public function __construct(mixed $_data = null){
         if (!is_null($_data) && $_data instanceof Configable)
             $this->_unpack($_data);

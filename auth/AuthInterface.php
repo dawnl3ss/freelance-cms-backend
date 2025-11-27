@@ -4,6 +4,11 @@ namespace auth;
 
 interface AuthInterface {
 
-    public function _tryAuthenticate() : bool;
+    /**
+     * Triggered function when user is either loging in or signing up or signing out
+     *
+     * @return bool
+     */
+    public function _tryAuth() : bool;
 
 }

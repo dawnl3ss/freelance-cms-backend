@@ -2,9 +2,7 @@
 
 namespace app\controller;
 
-use api\format\JsonResponse;
-
-use modules\database\DatabaseWrapper;
+use auth\gateway\LoginAuthGateway;
 
 class AppController {
 
@@ -14,5 +12,6 @@ class AppController {
      */
     public function index(){
         echo "Homepage demo for automated Router/Controller";
+        var_dump((new LoginAuthGateway("mm@gmail.com", '$2y$17$pKR083g.xdsjITp3d9neweBHGvUm.GeQbX6UB53BJ4eb0SLuPYFR.'))->_tryAuth());
     }
 }
