@@ -5,14 +5,14 @@ namespace auth\gateway;
 interface AuthGatewayEventInterface {
 
     /**
-     * Bind even when auth failed - Return success message
+     * Bind event when auth succeed - Return success message
      *
      * @return string
      */
     public function _onSuccess() : string;
 
     /**
-     * Bind even when auth failed - Return failure message
+     * Bind event when auth failed - Return failure message
      *
      * @return string
      */
