@@ -23,8 +23,11 @@ declare(strict_types=1);
 
 namespace auth\user;
 
+use security\UserInputValidatorTrait;
+
 
 class UserInstance implements UserInterface {
+    use UserInputValidatorTrait;
 
     /** @var int $_uid */
     private int $_uid;
@@ -65,12 +68,12 @@ class UserInstance implements UserInterface {
     /**
      * @return string
      */
-    public function _getUsername() : string { return $this->_username; }
+    public function _getUsername() : string { return $this->_sanitizeInput($this->_username); }
 
     /**
      * @return string
      */
-    public function _getEmail() : string { return $this->_email; }
+    public function _getEmail() : string { return $this->_sanitizeInput($this->_email); }
 
     /**
      * @return array
