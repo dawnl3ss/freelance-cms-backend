@@ -1,9 +1,31 @@
-<?php declare(strict_types=1);
+<?php
+
+/*
+ *
+ *      █████╗ ███████╗████████╗██╗  ██╗███████╗██████╗         ██████╗ ██╗  ██╗██████╗
+ *     ██╔══██╗██╔════╝╚══██╔══╝██║  ██║██╔════╝██╔══██╗        ██╔══██╗██║  ██║██╔══██╗
+ *     ███████║█████╗     ██║   ███████║█████╗  ██████╔╝ █████╗ ██████╔╝███████║██████╔╝
+ *     ██╔══██║██╔══╝     ██║   ██╔══██║██╔══╝  ██╔══██╗ ╚════╝ ██╔═══╝ ██╔══██║██╔═══╝
+ *     ██║  ██║███████╗   ██║   ██║  ██║███████╗██║  ██║        ██║     ██║  ██║██║
+ *     ╚═╝  ╚═╝╚══════╝   ╚═╝   ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝        ╚═╝     ╚═╝  ╚═╝╚═╝
+ *
+ *                      The divine lightweight PHP framework
+ *                  < 1 Mo • Zero dependencies • Pure PHP 8.3+
+ *
+ *  Built from scratch. No bloat. POO Embedded.
+ *
+ *  @author: dawnl3ss (Alex') ©2025 — All rights reserved
+ *  Source available • Commercial license required for redistribution
+ *  → github.com/dawnl3ss/Aether-PHP
+ *
+*/
+declare(strict_types=1);
 
 namespace auth\gateway;
 
 use auth\AuthInstance;
 use auth\security\PasswordHashingTrait;
+use auth\user\UserInstance;
 use config\ProjectConfig;
 
 final class RegisterAuthGateway extends AuthInstance implements AuthGatewayEventInterface {
@@ -43,6 +65,14 @@ final class RegisterAuthGateway extends AuthInstance implements AuthGatewayEvent
             "password_hash" => $this->_hashPassword($this->_password),
             "perms" => ""
         ]);
+        $user_db = $this->_dbconn->_select(ProjectConfig::AUTH_TABLE_GATEWAY, '*', [ "email" => $this->_email ])[0];
+
+        $_SESSION["user"] = serialize(new UserInstance(
+            $user_db["uid"],
+            $user_db["username"],
+            $user_db["email"],
+            $user_db["perms"]
+        ));
         return "user successfullly signed up.";
     }
 
@@ -50,6 +80,6 @@ final class RegisterAuthGateway extends AuthInstance implements AuthGatewayEvent
      * @return string
      */
     public function _onFailure() : string {
-        return "user sign-up failed.";
+        return "provided email is already used.";
     }
 }

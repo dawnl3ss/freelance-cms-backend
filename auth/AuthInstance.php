@@ -1,5 +1,26 @@
 <?php
 
+/*
+ *
+ *      █████╗ ███████╗████████╗██╗  ██╗███████╗██████╗         ██████╗ ██╗  ██╗██████╗
+ *     ██╔══██╗██╔════╝╚══██╔══╝██║  ██║██╔════╝██╔══██╗        ██╔══██╗██║  ██║██╔══██╗
+ *     ███████║█████╗     ██║   ███████║█████╗  ██████╔╝ █████╗ ██████╔╝███████║██████╔╝
+ *     ██╔══██║██╔══╝     ██║   ██╔══██║██╔══╝  ██╔══██╗ ╚════╝ ██╔═══╝ ██╔══██║██╔═══╝
+ *     ██║  ██║███████╗   ██║   ██║  ██║███████╗██║  ██║        ██║     ██║  ██║██║
+ *     ╚═╝  ╚═╝╚══════╝   ╚═╝   ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝        ╚═╝     ╚═╝  ╚═╝╚═╝
+ *
+ *                      The divine lightweight PHP framework
+ *                  < 1 Mo • Zero dependencies • Pure PHP 8.3+
+ *
+ *  Built from scratch. No bloat. POO Embedded.
+ *
+ *  @author: dawnl3ss (Alex') ©2025 — All rights reserved
+ *  Source available • Commercial license required for redistribution
+ *  → github.com/dawnl3ss/Aether-PHP
+ *
+*/
+declare(strict_types=1);
+
 namespace auth;
 
 use config\ProjectConfig;
@@ -13,8 +34,8 @@ abstract class AuthInstance implements AuthInterface {
     /** @var string $_password */
     protected string $_password;
 
-    /** @var bool $_status */
-    protected bool $_status;
+    /** @var string $_status */
+    protected string $_status;
 
     /** @var DatabaseWrapper $_dbconn */
     protected DatabaseWrapper $_dbconn;
@@ -22,7 +43,7 @@ abstract class AuthInstance implements AuthInterface {
     public function __construct(string $email, string $password){
         $this->_email = $email;
         $this->_password = $password;
-        $this->_status = false;
+        $this->_status = "";
         $this->_dbconn = new DatabaseWrapper(ProjectConfig::AUTH_DATABASE_GATEWAY);
     }
 
@@ -34,7 +55,7 @@ abstract class AuthInstance implements AuthInterface {
     /**
      * @return string
      */
-    protected function _getPassword() : string { return $this->_email; }
+    protected function _getPassword() : string { return $this->_password; }
 
 
     /**

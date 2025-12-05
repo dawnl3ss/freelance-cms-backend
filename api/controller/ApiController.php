@@ -21,15 +21,54 @@
 */
 declare(strict_types=1);
 
-namespace auth;
+namespace api\controller;
 
-interface AuthInterface {
+
+use api\format\JsonResponse;
+use config\ProjectConfig;
+
+class ApiController {
+
+    public function __construct(){
+        header('Content-Type: application/json');
+    }
 
     /**
-     * Triggered function when user is either loging in or signing up or signing out
+     * API listing route
      *
-     * @return bool
+     * [@method] => GET
+     * [@route] => /api/v1
      */
-    public function _tryAuth() : bool;
+    public function api(){
+        echo (new JsonResponse())
+            ->_add("version", 1.0)
+            ->_add("name", ProjectConfig::PROJECT_NAME . " backend | Powered by Aether-PHP framework.")
+            ->_add("description", "Backend API v1 for " . ProjectConfig::PROJECT_NAME)
+            ->_add("routes", array(
+                [
+                    "method" => "GET",
+                    "path" => "/api/v1",
+                    "description" => "API v1 lobby"
+                ],
+                [
+                    "method" => "GET",
+                    "path" => "/api/v1/test",
+                    "description" => "Test Route for API"
+                ]
+            ))
+        ->_encode();
+    }
 
+
+    /**
+     * Test API route
+     *
+     * [@method] => GET
+     * [@route] => /api/v1/test
+     */
+    public function test(){
+        echo (new JsonResponse())
+            ->_add("test", "this is a test")
+        ->_encode();
+    }
 }

@@ -21,15 +21,31 @@
 */
 declare(strict_types=1);
 
-namespace auth;
+namespace api\format;
 
-interface AuthInterface {
+class HttpPostParameterUnpacker {
+
+    /** @var array $_decoded */
+    private array $_decoded;
 
     /**
-     * Triggered function when user is either loging in or signing up or signing out
-     *
-     * @return bool
+     * The goal here is to extract data from php://input stream to translate it to class object.
      */
-    public function _tryAuth() : bool;
+    public function __construct(){
+        $this->_decoded = json_decode(file_get_contents('php://input'), true);
+    }
 
+    /**
+     * Check if _attr is in the decoded arr before returning it.
+     *
+     * @param string $_attr
+     *
+     * @return mixed
+     */
+    public function _getAttribute(string $_attr) : mixed {
+        if (!isset($this->_decoded[$_attr]))
+            return false;
+
+        return $this->_decoded[$_attr];
+    }
 }

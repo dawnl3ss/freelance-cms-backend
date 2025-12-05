@@ -1,11 +1,29 @@
 <?php
 
+/*
+ *
+ *      █████╗ ███████╗████████╗██╗  ██╗███████╗██████╗         ██████╗ ██╗  ██╗██████╗
+ *     ██╔══██╗██╔════╝╚══██╔══╝██║  ██║██╔════╝██╔══██╗        ██╔══██╗██║  ██║██╔══██╗
+ *     ███████║█████╗     ██║   ███████║█████╗  ██████╔╝ █████╗ ██████╔╝███████║██████╔╝
+ *     ██╔══██║██╔══╝     ██║   ██╔══██║██╔══╝  ██╔══██╗ ╚════╝ ██╔═══╝ ██╔══██║██╔═══╝
+ *     ██║  ██║███████╗   ██║   ██║  ██║███████╗██║  ██║        ██║     ██║  ██║██║
+ *     ╚═╝  ╚═╝╚══════╝   ╚═╝   ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝        ╚═╝     ╚═╝  ╚═╝╚═╝
+ *
+ *                      The divine lightweight PHP framework
+ *                  < 1 Mo • Zero dependencies • Pure PHP 8.3+
+ *
+ *  Built from scratch. No bloat. POO Embedded.
+ *
+ *  @author: dawnl3ss (Alex') ©2025 — All rights reserved
+ *  Source available • Commercial license required for redistribution
+ *  → github.com/dawnl3ss/Aether-PHP
+ *
+*/
+declare(strict_types=1);
+
 namespace modules\database;
 
-
-use modules\database\drivers\DatabaseConnectable;
 use modules\database\drivers\DatabaseDriver;
-use modules\database\drivers\DatabaseDriverEnum;
 use modules\database\drivers\list\DatabasePdoDriver;
 
 
@@ -44,7 +62,6 @@ class DatabaseWrapper {
 
             $query .= " WHERE " . implode(" AND ", $conditions);
         }
-
 
         return $this->_driver->_database($this->_database)->_query($query, $assoc);
     }

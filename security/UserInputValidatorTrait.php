@@ -21,15 +21,17 @@
 */
 declare(strict_types=1);
 
-namespace auth;
+namespace security;
 
-interface AuthInterface {
+trait UserInputValidatorTrait {
 
-    /**
-     * Triggered function when user is either loging in or signing up or signing out
+
+    /*
+     * @param string $_str
      *
-     * @return bool
+     * @return string
      */
-    public function _tryAuth() : bool;
-
+    public function _sanitizeInput(string $_str) : string {
+        return htmlspecialchars($_str, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+    }
 }
