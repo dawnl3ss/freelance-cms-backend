@@ -3,9 +3,10 @@
 namespace app\controller;
 
 use auth\gateway\LoginAuthGateway;
-use modules\database\DatabaseWrapper;
+use auth\security\PasswordHashingTrait;
 
 class AppController {
+    use PasswordHashingTrait;
 
     /**
      * [@method] => GET
@@ -13,5 +14,8 @@ class AppController {
      */
     public function index(){
         echo "Homepage demo for automated Router/Controller";
+        echo "<br><br>";
+        var_dump((new LoginAuthGateway("admin@gmail.com", "aetherphp"))->_tryAuth());
+        echo "<br><br>";
     }
 }
