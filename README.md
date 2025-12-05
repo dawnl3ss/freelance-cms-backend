@@ -9,8 +9,8 @@
 ![Dependencies](https://img.shields.io/badge/dependencies-0-red?style=flat)
 
 </div>
-
-
+  
+  
 ```
      █████╗ ███████╗████████╗██╗  ██╗███████╗██████╗         ██████╗ ██╗  ██╗██████╗
     ██╔══██╗██╔════╝╚══██╔══╝██║  ██║██╔════╝██╔══██╗        ██╔══██╗██║  ██║██╔══██╗
@@ -27,10 +27,10 @@
  @author: dawnl3ss (Alex') ©2025 — All rights reserved
  Source available • Commercial license required for redistribution
  → github.com/dawnl3ss/Aether-PHP
-```
-
+```  
+  
 > Built from scratch. No Composer. No bloat.  
-> Because waiting 8 seconds to install 147 packages just to echo "Hello World" is a crime.
+> Because waiting 8 seconds to install 147 packages just to echo "Hello World" is a crime.  
 
 
 ### ✨ Features (already production-ready)
@@ -51,9 +51,8 @@
 - Route caching (dev → prod in 1ms)
 - Middleware system (Rate limiting, CORS, etc.)
 - Full RBAC permission system
-- Sexy admin dashboard
+- Admin dashboard
 - Module / plugin system (payments, file handling, etc.)
-- CLI tool (`php aether make:controller`)
 
 ### 📖 Quick start
 
