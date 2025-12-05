@@ -3,10 +3,8 @@
 namespace app\controller;
 
 use auth\gateway\LoginAuthGateway;
-use auth\security\PasswordHashingTrait;
 
 class AppController {
-    use PasswordHashingTrait;
 
     /**
      * [@method] => GET

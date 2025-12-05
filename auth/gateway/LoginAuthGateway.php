@@ -17,6 +17,8 @@ final class LoginAuthGateway extends AuthInstance implements AuthGatewayEventInt
     }
 
     /**
+     * Auth job's purpose : check if provided data are corrects
+     *
      * @return bool
      */
     public function _tryAuth() : bool {
