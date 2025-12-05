@@ -1,4 +1,4 @@
-# freelance-cms-backend
+# Aether PHP
 POO embedded, fast and lightweight CMS written in PHP 8.
 
 Project will start soon.
