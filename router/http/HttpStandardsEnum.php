@@ -21,30 +21,14 @@
 */
 declare(strict_types=1);
 
-namespace app\controller;
-
-use auth\user\UserInstance;
+namespace router\http;
 
 
-class AppController {
+enum HttpStandardsEnum: string {
 
-    /**
-     * [@method] => GET
-     * [@route] => /
-     */
-    public function index(){
-        echo "Homepage demo for automated Router/Controller<br>";
-        var_dump(UserInstance::_isLoggedIn());
-    }
-
-    /**
-     * [@method] => GET
-     * [@route] => /test
-     */
-    public function test(){
-        echo "<pre>";
-        echo "kjlsdqd";
-        echo "</pre>";
-    }
+    case HTTP_GET = 'GET';
+    case HTTP_POST = 'POST';
+    case HTTP_DELETE = 'DELETE';
+    case HTTP_PUT = 'PUT';
 
 }

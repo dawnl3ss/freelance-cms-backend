@@ -23,71 +23,23 @@ declare(strict_types=1);
 
 namespace router;
 
-use router\route\Route;
-
 
 interface RouterInterface {
 
     /**
+     * Add a route in the list
+     *
+     * @param string $method
      * @param string $route
+     * @param $callable
      *
-     * @param string|array|callback $callback
-     *
-     * @return Route
+     * @return Router
      */
-    public static function get(string $route, $callback);
+    public function _addRoute(string $method, string $route, $callable) : Router;
 
     /**
-     * @param string $route
-     *
-     * @param string|array|callback $callback
-     *
-     * @return Route
+     * Run the core Router job
      */
-    public static function post(string $route, $callback);
+    public function _run() : bool;
 
-    /**
-     * @param string $route
-     *
-     * @param string|array|callback $callback
-     *
-     * @return Route
-     */
-    public static function put(string $route, $callback);
-
-    /**
-     * @param string $route
-     *
-     * @param string|array|callback $callback
-     *
-     * @return Route
-     */
-    public static function patch(string $route, $callback);
-
-    /**
-     * @param string $route
-     *
-     * @param string|array|callback $callback
-     *
-     * @return Route
-     */
-    public static function delete(string $route, $callback);
-
-    /**
-     * @param string $route
-     *
-     * @param string|array|callback $callback
-     *
-     * @return Route
-     */
-    public static function options(string $route, $callback);
-
-    /**
-     * @param string $route
-     *
-     * @param string|array|callback $callback
-     *
-     * @return Route
-     */
-    public static function head(string $route, $callback);
 }

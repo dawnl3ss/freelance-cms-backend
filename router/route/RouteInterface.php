@@ -21,30 +21,29 @@
 */
 declare(strict_types=1);
 
-namespace app\controller;
-
-use auth\user\UserInstance;
+namespace router\route;
 
 
-class AppController {
+interface RouteInterface {
 
     /**
-     * [@method] => GET
-     * [@route] => /
+     * Get Route's HTTP method
+     *
+     * @return string
      */
-    public function index(){
-        echo "Homepage demo for automated Router/Controller<br>";
-        var_dump(UserInstance::_isLoggedIn());
-    }
+    public function _getMethod() : string;
 
     /**
-     * [@method] => GET
-     * [@route] => /test
+     * Get Route's name
+     *
+     * @return string
      */
-    public function test(){
-        echo "<pre>";
-        echo "kjlsdqd";
-        echo "</pre>";
-    }
+    public function _getRoute() : string;
 
+    /**
+     * Get Route's callable function
+     *
+     * @return
+     */
+    public function _getCallable();
 }

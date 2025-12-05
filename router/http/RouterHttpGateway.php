@@ -21,15 +21,22 @@
 */
 declare(strict_types=1);
 
-namespace router\standards;
+namespace router\http;
 
 
-interface StandardMethods {
+final class RouterHttpGateway {
 
-    const string METHOD_GET = 'get';
-    const string METHOD_POST = 'post';
-    const string METHOD_PUT = 'put';
-    const string METHOD_PATCH = 'patch';
-    const string METHOD_DELETE = 'delete';
+    /**
+     * @return string
+     */
+    public static function _getHttpRequestUri() : string {
+        return $_SERVER['REQUEST_URI'];
+    }
 
+    /**
+     * @return string
+     */
+    public static function _getHttpRequestMethod() : string {
+        return $_SERVER['REQUEST_METHOD'];
+    }
 }

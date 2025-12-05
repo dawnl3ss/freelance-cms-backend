@@ -24,51 +24,37 @@ declare(strict_types=1);
 namespace router\route;
 
 
-class Route {
+class Route implements RouteInterface {
 
-    /** @var string $method */
-    private string $method;
+    /** @var string $_method */
+    private string $_method;
 
-    /** @var string $route */
-    private string $route;
+    /** @var string $_route */
+    private string $_route;
 
-    /** @var $callback */
-    private $callback;
+    /** @var $_callable */
+    private $_callable;
 
-    public function __construct(string $method, string $route, $callback){
-        $this->method = $method;
-        $this->route = $route;
-        $this->callback = $callback;
-    }
 
-    /**
-     * @param string $name
-     *
-     * @return $this
-     */
-    public function name(string $name) : self {
-        self::$routes[$name] = $this->route;
-        return $this;
-    }
-
-    public function previous() : void {
-        $previous = $_SERVER['HTTP_REFERER'] ?? '/';
-        header("Location: $previous", true, 302);
-        return;
+    public function __construct(string $method, string $route, $callable){
+        $this->_method = $method;
+        $this->_route = $route;
+        $this->_callable = $callable;
     }
 
     /**
      * @return string
      */
-    public function get_method() : string { return $this->method; }
+    public function _getMethod() : string { return $this->_method; }
 
     /**
      * @return string
      */
-    public function get_route() : string { return $this->route; }
+    public function _getRoute() : string {  return $this->_route; }
 
     /**
-     * @return mixed
+     * @return
      */
-    public function get_callback(){ return $this->callback; }
+    public function _getCallable() { return $this->_callable; }
+
 }

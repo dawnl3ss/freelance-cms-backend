@@ -35,6 +35,7 @@ final class ControllerGateway {
     public function _link() : void {
         $directory = __DIR__ . '/../app/controller/*.php';
         $controllerFiles = glob($directory);
+        $router = new Router();
 
         foreach ($controllerFiles as $file){
             $class_name = 'app\controller\\' . pathinfo($file, PATHINFO_FILENAME);
@@ -58,36 +59,10 @@ final class ControllerGateway {
                     continue;
                 }
 
-                $method_type = strtolower($method_type);
-
-                if (!method_exists(\router\Router::class, $method_type)) {
-                    echo "[ControllerGateway] - ERROR - Router method $method_type does not exist";
-                    continue;
-                }
-
-                \router\Router::$method_type($route, "{$class_name}@{$method->getName()}");
+                $router->_addRoute(strtoupper($method_type), $route, "{$class_name}@{$method->getName()}");
             }
         }
-        $this->_linkAPI();
-    }
 
-    /**
-     *
-     *
-     * @param string $docComment
-     *
-     * @param string $annotation
-     *
-     * @return string|null
-     */
-    private function extractAnnotation(string $docComment, string $annotation) : ?string {
-        if (preg_match("/\\[@{$annotation}\\]\\s*=>\\s*(\\S+)/", $docComment, $matches))
-            return $matches[1];
-
-        return null;
-    }
-
-    private function _linkAPI(){
         $directory = __DIR__ . '/../api/controller/*.php';
         $controllerFiles = glob($directory);
 
@@ -113,15 +88,26 @@ final class ControllerGateway {
                     continue;
                 }
 
-                $method_type = strtolower($method_type);
-
-                if (!method_exists(\router\Router::class, $method_type)) {
-                    echo "[ControllerGateway] - ERROR - Router method $method_type does not exist";
-                    continue;
-                }
-
-                \router\Router::$method_type($route, "{$class_name}@{$method->getName()}");
+                $router->_addRoute(strtoupper($method_type), $route, "{$class_name}@{$method->getName()}");
             }
         }
+
+        $router->_run();
+    }
+
+    /**
+     *
+     *
+     * @param string $docComment
+     *
+     * @param string $annotation
+     *
+     * @return string|null
+     */
+    private function extractAnnotation(string $docComment, string $annotation) : ?string {
+        if (preg_match("/\\[@{$annotation}\\]\\s*=>\\s*(\\S+)/", $docComment, $matches))
+            return $matches[1];
+
+        return null;
     }
 }

@@ -23,187 +23,105 @@ declare(strict_types=1);
 
 namespace router;
 
+use router\http\RouterHttpGateway;
 use router\route\Route;
+use security\UserInputValidatorTrait;
 
 
-class Router implements RouterInterface {
+final class Router implements  RouterInterface {
+    use UserInputValidatorTrait;
 
-    /** @var bool $find */
-    private static bool $find = false;
 
-    /** @var null|string $base_url */
-    private static $base_url = null;
+    /** @var array[] $_routes */
+    public $_routes = array(
+        "GET" => [],
+        "POST" => [],
+        "DELETE" => [],
+        "PUT" => [],
+    );
+
 
     /**
+     * @param string $method
      * @param string $route
+     * @param $callable
      *
-     * @param callable $callback
+     * @return Router
      */
-    public static function group(string $base, callable $callback){
-        self::$base_url = trim($base, '/');
-        $callback();
-        self::$base_url = null;
+    public function _addRoute(string $method, string $route, $callable) : Router {
+        array_push($this->_routes[$method], new Route($method, $route, $callable));
+        return $this;
     }
 
-    /**
-     * @param string $route
-     *
-     * @param string|array|callback $callback
-     *
-     * @return Route
-     */
-    public static function get(string $route, $callback) : Route {
-        self::match('GET', $route, $callback);
-        return new Route('GET', $route, $callback);
-    }
 
     /**
-     * @param string $route
-     *
-     * @param string|array|callback $callback
-     *
-     * @return Route
+     * @return bool
+     * @throws \Exception
      */
-    public static function post(string $route, $callback) : Route {
-        self::match('POST', $route, $callback);
-        return new Route('POST', $route, $callback);
-    }
+    public function _run() : bool {
+        $req_uri = RouterHttpGateway::_getHttpRequestUri();
+        $req_method = strtoupper(RouterHttpGateway::_getHttpRequestMethod());
 
-    /**
-     * @param string $route
-     * 
-     * @param string|array|callback $callback
-     * 
-     * @return Route
-     */
-    public static function put(string $route, $callback) : Route {
-        self::match('PUT', $route, $callback);
-        return new Route('PUT', $route, $callback);
-    }
+        if (!isset($this->_routes[$req_method]))
+            return false;
 
-    /**
-     * @param string $route
-     *
-     * @param string|array|callback $callback
-     *
-     * @return Route
-     */
-    public static function patch(string $route, $callback) : Route {
-        self::match('PATCH', $route, $callback);
-        return new Route('PATCH', $route, $callback);
-    }
+        foreach ($this->_routes[$req_method] as $route){
+            if ($route instanceof Route){
 
-    /**
-     * @param string $route
-     *
-     * @param string|array|callback $callback
-     *
-     * @return Route
-     */
-    public static function delete(string $route, $callback) : Route {
-        self::match('DELETE', $route, $callback);
-        return new Route('DELETE', $route, $callback);
-    }
+                # - Case 1 : URI == route - ex: uri:(/test) route:(/test)
+                if (trim($req_uri, '/') == trim($route->_getRoute(), '/')){
+                    header('HTTP/1.1 200 OK', true, 200);
+                    $this->_execute($route->_getCallable());
+                    return true;
+                }
 
-    /**
-     * @param string $route
-     *
-     * @param string|array|callback $callback
-     *
-     * @return Route
-     */
-    public static function options(string $route, $callback) : Route {
-        self::match('OPTIONS', $route, $callback);
-        return new Route('OPTIONS', $route, $callback);
-    }
+                # - Case 2 : URI contains params
+                $path = preg_replace('#{([\w])+}#', '([^/]+)', trim($route->_getRoute(), '/'));
+                $path_to_match = "#^$path$#";
 
-    /**
-     * @param string $route
-     *
-     * @param string|array|callback $callback
-     *
-     * @return Route
-     */
-    public static function head(string $route, $callback) : Route {
-        self::match('HEAD', $route, $callback);
-        return new Route('HEAD', $route, $callback);
-    }
-
-    /**
-     * @param string|array $method
-     *
-     * @param string $route
-     *
-     * @param string|array|callback $callback
-     *
-     * @return void
-     */
-    public static function match($method, string $route, $callback){
-        if (!is_null(self::$base_url)) $route = self::$base_url . $route;
-        $route = trim($route, '/');
-
-        if (is_array($method)) {
-            foreach ($method as $m) {
-                self::match($m, $route, $callback);
+                if (preg_match_all($path_to_match, trim($req_uri, '/'), $params)){
+                    header('HTTP/1.1 200 OK', true, 200);
+                    $this->_execute($route->_getCallable(), $params);
+                    return true;
+                }
             }
-            return;
         }
 
-        if ($_SERVER['REQUEST_METHOD'] === strtoupper($method)){
-            if (trim($_SERVER['REQUEST_URI'], '/') == $route){
-                self::$find = true;
-                header('HTTP/1.1 200 OK', true, 200);
-                self::execute($callback);
-                return;
-            }
-
-            $path = preg_replace('#{([\w])+}#', '([^/]+)', $route);
-            $path_to_match = "#^$path$#";
-
-            if (preg_match_all($path_to_match, trim($_SERVER['REQUEST_URI'], '/'), $matche) && !self::$find){
-                self::$find = true;
-                header('HTTP/1.1 200 OK', true, 200);
-                self::execute($callback, $matche);
-                return;
-            }
-            if (!self::$find) header('HTTP/1.0 404 Not Found', true, 404);
-        }
+        header("HTTP/1.1 404 Not Found", true, 404);
+        return false;
     }
 
+
     /**
-     * @param string|array|callback $callback
+     * @param $callback
+     * @param array|null $matche
      *
-     * @param array $matche
-     *
-     * @return void
+     * @return mixed
+     * @throws \Exception
      */
-    private static function execute($callback, ?array $matche = []){
+    private function _execute($callback, ?array $params = []){
         $matches = [];
 
-        foreach($matche as $key => $value) {
-            if ($key != 0) {
-                array_push($matches, htmlspecialchars($value[0]));
-            }
+        foreach($params as $key => $value){
+            if ($key != 0)
+                array_push($matches, $this->_sanitizeInput($value[0]));
         }
 
-        if (is_callable($callback)) {
+        if (is_callable($callback))
             return call_user_func_array($callback, $matches);
-        }
 
-        if (is_string($callback)) {
+        if (is_string($callback))
             $callback = explode('@', $callback);
-        }
 
-        if (!class_exists($callback[0])) {
+        if (!class_exists($callback[0]))
             throw new \Exception("Class {$callback[0]} not found");
-        }
 
         $class = new $callback[0];
 
-        if (!method_exists($class, $callback[1])) {
+        if (!method_exists($class, $callback[1]))
             throw new \Exception("Method $callback[1] not found in class $callback[0]");
-        }
 
         return call_user_func_array([$class, $callback[1]], $matches);
     }
+
 }
