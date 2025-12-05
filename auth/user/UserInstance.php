@@ -24,6 +24,17 @@ class UserInstance implements UserInterface {
     }
 
     /**
+     * Check if a user is logged in.
+     *
+     * @param array $_session
+     *
+     * @return bool
+     */
+    public static function _isLoggedIn() : bool {
+        return isset($_SESSION["user"]) && unserialize($_SESSION["user"]) instanceof UserInstance;
+    }
+
+    /**
      * @return int
      */
     public function _getUid() : int { return $this->_uid; }

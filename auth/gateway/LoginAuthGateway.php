@@ -22,20 +22,15 @@ final class LoginAuthGateway extends AuthInstance implements AuthGatewayEventInt
      * @return bool
      */
     public function _tryAuth() : bool {
-        if (!$this->_dbconn->_exist(ProjectConfig::AUTH_TABLE_GATEWAY, [ "email" => $this->_email ])) {
-            $this->_onFailure();
-            return $this->_setStatus(false);
-        }
+        if (!$this->_dbconn->_exist(ProjectConfig::AUTH_TABLE_GATEWAY, [ "email" => $this->_email ]))
+            return $this->_setStatus($this->_onFailure(), false);
 
         $_data = $this->_dbconn->_select(ProjectConfig::AUTH_TABLE_GATEWAY, '*', [ "email" => $this->_email ])[0];
 
-        if (!$this->_checkPassword($this->_password, $_data["password_hash"])){
-            $this->_onFailure();
-            return $this->_setStatus(false);
-        }
+        if (!$this->_checkPassword($this->_password, $_data["password_hash"]))
+            return $this->_setStatus($this->_onFailure(), false);
 
-        $this->_onSuccess($_data);
-        return $this->_setStatus(true);
+        return $this->_setStatus($this->_onSuccess($_data), true);
     }
 
     /***
@@ -46,12 +41,12 @@ final class LoginAuthGateway extends AuthInstance implements AuthGatewayEventInt
     public function _onSuccess(array $_data) : string {
         $user_db = $_data;
 
-        $_SESSION["user"] = new UserInstance(
+        $_SESSION["user"] = serialize(new UserInstance(
             $user_db["uid"],
             $user_db["username"],
             $user_db["email"],
             $user_db["perms"]
-        );
+        ));
         return "user successfullly logged in.";
     }
 

@@ -2,7 +2,10 @@
 
 namespace app\controller;
 
+
 use auth\gateway\LoginAuthGateway;
+use auth\gateway\LogoutAuthGateway;
+use auth\user\UserInstance;
 
 class AppController {
 
@@ -12,8 +15,18 @@ class AppController {
      */
     public function index(){
         echo "Homepage demo for automated Router/Controller";
-        echo "<br><br>";
-        var_dump((new LoginAuthGateway("admin@gmail.com", "aetherphp"))->_tryAuth());
-        echo "<br><br>";
+    }
+
+    /**
+     * [@method] => GET
+     * [@route] => /test
+     */
+    public function test(){
+        echo "<pre>";
+        //var_dump((new LogoutAuthGateway())->_tryAuth());
+        //var_dump((new LoginAuthGateway("admin@gmail.com", "aetherphp"))->_tryAuth());
+        //var_dump(UserInstance::_isLoggedIn());
+        //var_dump(unserialize($_SESSION["user"])->_getEmail());
+        echo "</pre>";
     }
 }

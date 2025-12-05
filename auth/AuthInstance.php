@@ -43,12 +43,18 @@ abstract class AuthInstance implements AuthInterface {
     protected function _isValid() : bool { return $this->_status; }
 
     /**
+     * @return string
+     */
+    public function _getStatus() : string { return $this->_status; }
+
+    /**
+     * @param string $message
      * @param bool $status
      *
      * @return bool
      */
-    protected function _setStatus(bool $status) : bool {
-        $this->_status = $status;
+    protected function _setStatus(string $message, bool $status) : bool {
+        $this->_status = $message;
         return $status;
     }
 

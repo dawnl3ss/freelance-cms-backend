@@ -8,7 +8,7 @@ use \ReflectionException;
 final class ControllerGateway {
 
     /**
-     * Router => Controller Gateway
+     * Router => Controller Gateway | & API integration
      */
     public function _link() : void {
         $directory = __DIR__ . '/../app/controller/*.php';
@@ -46,6 +46,7 @@ final class ControllerGateway {
                 \router\Router::$method_type($route, "{$class_name}@{$method->getName()}");
             }
         }
+        $this->_linkAPI();
     }
 
     /**
@@ -62,5 +63,43 @@ final class ControllerGateway {
             return $matches[1];
 
         return null;
+    }
+
+    private function _linkAPI(){
+        $directory = __DIR__ . '/../api/controller/*.php';
+        $controllerFiles = glob($directory);
+
+        foreach ($controllerFiles as $file){
+            $class_name = 'api\controller\\' . pathinfo($file, PATHINFO_FILENAME);
+
+            try {
+                $reflection = new ReflectionClass($class_name);
+            } catch (ReflectionException $e){
+                echo "[ControllerGateway] - ERROR - Cannot reflect class $class_name: " . $e->getMessage();
+                continue;
+            }
+
+            foreach ($reflection->getMethods() as $method){
+                $doc = $method->getDocComment();
+                if (!$doc) continue;
+
+                $method_type = $this->extractAnnotation($doc, 'method');
+                $route = $this->extractAnnotation($doc, 'route');
+
+                if (!$method_type || !$route){
+                    echo "[ControllerGateway] - ERROR - Wrong PHP Doc for {$class_name} Controller, method {$method->getName()}";
+                    continue;
+                }
+
+                $method_type = strtolower($method_type);
+
+                if (!method_exists(\router\Router::class, $method_type)) {
+                    echo "[ControllerGateway] - ERROR - Router method $method_type does not exist";
+                    continue;
+                }
+
+                \router\Router::$method_type($route, "{$class_name}@{$method->getName()}");
+            }
+        }
     }
 }
