@@ -10,7 +10,7 @@
  *     ╚═╝  ╚═╝╚══════╝   ╚═╝   ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝        ╚═╝     ╚═╝  ╚═╝╚═╝
  *
  *                      The divine lightweight PHP framework
- *                  < 1 Mo • Zero dependencies • Pure PHP 8.3+
+ *                   < 1 Mo • Zero dependencies • Pure PHP 8.3+
  *
  *  Built from scratch. No bloat. POO Embedded.
  *

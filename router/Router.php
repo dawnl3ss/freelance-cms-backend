@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace router;
 
+use router\http\HttpStandardsEnum;
 use router\http\RouterHttpGateway;
 use router\route\Route;
 use security\UserInputValidatorTrait;
@@ -75,7 +76,11 @@ final class Router implements  RouterInterface {
                     return true;
                 }
 
-                # - Case 2 : URI contains params
+
+                # - Case 2 : URI contains params - only for HTTP GET
+                if ($req_method !== HttpStandardsEnum::HTTP_GET)
+                    return false;
+
                 $path = preg_replace('#{([\w])+}#', '([^/]+)', trim($route->_getRoute(), '/'));
                 $path_to_match = "#^$path$#";
 
