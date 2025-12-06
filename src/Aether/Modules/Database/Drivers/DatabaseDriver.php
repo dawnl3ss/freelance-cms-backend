@@ -21,21 +21,66 @@
 */
 declare(strict_types=1);
 
+namespace Aether\Modules\Database\Drivers;
 
-spl_autoload_register(function ($class){
+use Aether\Config\ProjectConfig;
+use Aether\Utils\IdsMap;
 
-    # - Aether Core
-    if (str_starts_with($class, 'Aether\\')) {
-        $file = __DIR__ . '/src/' . str_replace('\\', '/', $class) . '.php';
-        if (file_exists($file)) require_once $file;
+
+abstract class DatabaseDriver implements DatabaseConnectable {
+
+    /** @var string $_database */
+    protected string $_database;
+
+    /** @var DatabaseDriverEnum $_driver */
+    protected DatabaseDriverEnum $_driver;
+
+    public function __construct(DatabaseDriverEnum $driver){
+        $this->_driver = $driver;
     }
 
-    # - Custom App Backend
-    if (str_starts_with($class, 'App\\')) {
-        $file = __DIR__ . '/app/' . str_replace('\\', '/', $class) . '.php';
-        if (file_exists($file)) require_once $file;
+    /**
+     * @param string $database
+     *
+     * @return DatabaseDriver
+     */
+    public function _database(string $database) : self {
+        $this->_database = $database;
+        return $this;
     }
-});
+
+    /**
+     * @return IdsMap
+     */
+    protected function _getIds() : IdsMap {
+        return new IdsMap(ProjectConfig::DATABASE_USERNAME, ProjectConfig::DATABASE_PASSWORD);
+    }
+
+    /**
+     * @return string
+     */
+    protected function _getHost() : string {
+        return ProjectConfig::DATABASE_ADDRESS;
+    }
+
+    /**
+     * @return mixed
+     */
+    abstract public function _connect() : DatabaseDriver;
 
 
-?>
+    /**
+     * @param string $query
+     * @param array $params
+     *
+     * @return mixed
+     */
+    abstract public function _query(string $query, array $params) : mixed;
+
+
+    /**
+     * @return array
+     */
+    abstract public function _dump() : array;
+
+}

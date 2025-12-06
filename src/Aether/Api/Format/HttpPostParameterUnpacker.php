@@ -21,21 +21,32 @@
 */
 declare(strict_types=1);
 
+namespace Aether\Api\Format;
 
-spl_autoload_register(function ($class){
 
-    # - Aether Core
-    if (str_starts_with($class, 'Aether\\')) {
-        $file = __DIR__ . '/src/' . str_replace('\\', '/', $class) . '.php';
-        if (file_exists($file)) require_once $file;
+class HttpPostParameterUnpacker {
+
+    /** @var array $_decoded */
+    private array $_decoded;
+
+    /**
+     * The goal here is to extract data from php://input stream to translate it to class object.
+     */
+    public function __construct(){
+        $this->_decoded = json_decode(file_get_contents('php://input'), true);
     }
 
-    # - Custom App Backend
-    if (str_starts_with($class, 'App\\')) {
-        $file = __DIR__ . '/app/' . str_replace('\\', '/', $class) . '.php';
-        if (file_exists($file)) require_once $file;
+    /**
+     * Check if _attr is in the decoded arr before returning it.
+     *
+     * @param string $_attr
+     *
+     * @return mixed
+     */
+    public function _getAttribute(string $_attr) : mixed {
+        if (!isset($this->_decoded[$_attr]))
+            return false;
+
+        return $this->_decoded[$_attr];
     }
-});
-
-
-?>
+}

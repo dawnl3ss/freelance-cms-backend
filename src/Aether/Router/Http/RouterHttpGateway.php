@@ -21,21 +21,22 @@
 */
 declare(strict_types=1);
 
+namespace Aether\Router\Http;
 
-spl_autoload_register(function ($class){
 
-    # - Aether Core
-    if (str_starts_with($class, 'Aether\\')) {
-        $file = __DIR__ . '/src/' . str_replace('\\', '/', $class) . '.php';
-        if (file_exists($file)) require_once $file;
+final class RouterHttpGateway {
+
+    /**
+     * @return string
+     */
+    public static function _getHttpRequestUri() : string {
+        return $_SERVER['REQUEST_URI'];
     }
 
-    # - Custom App Backend
-    if (str_starts_with($class, 'App\\')) {
-        $file = __DIR__ . '/app/' . str_replace('\\', '/', $class) . '.php';
-        if (file_exists($file)) require_once $file;
+    /**
+     * @return string
+     */
+    public static function _getHttpRequestMethod() : string {
+        return $_SERVER['REQUEST_METHOD'];
     }
-});
-
-
-?>
+}

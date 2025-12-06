@@ -21,21 +21,62 @@
 */
 declare(strict_types=1);
 
+namespace Aether\Auth\User;
 
-spl_autoload_register(function ($class){
+use Aether\Security\UserInputValidatorTrait;
 
-    # - Aether Core
-    if (str_starts_with($class, 'Aether\\')) {
-        $file = __DIR__ . '/src/' . str_replace('\\', '/', $class) . '.php';
-        if (file_exists($file)) require_once $file;
+
+class UserInstance implements UserInterface {
+    use UserInputValidatorTrait;
+
+    /** @var int $_uid */
+    private int $_uid;
+
+    /** @var string $_username */
+    private string $_username;
+
+    /** @var string $_email */
+    private string $_email;
+
+    /** @var array $_perms */
+    private array $_perms;
+
+    public function __construct(int $uid, string $username, string $email, string $_perms){
+        $this->_uid = $uid;
+        $this->_username = $username;
+        $this->_email = $email;
+        $this->_perms = explode(',', $_perms);
     }
 
-    # - Custom App Backend
-    if (str_starts_with($class, 'App\\')) {
-        $file = __DIR__ . '/app/' . str_replace('\\', '/', $class) . '.php';
-        if (file_exists($file)) require_once $file;
+    /**
+     * Check if a user is logged in.
+     *
+     * @param array $_session
+     *
+     * @return bool
+     */
+    public static function _isLoggedIn() : bool {
+        return isset($_SESSION["user"]) && unserialize($_SESSION["user"]) instanceof UserInstance;
     }
-});
+
+    /**
+     * @return int
+     */
+    public function _getUid() : int { return $this->_uid; }
 
 
-?>
+    /**
+     * @return string
+     */
+    public function _getUsername() : string { return $this->_sanitizeInput($this->_username); }
+
+    /**
+     * @return string
+     */
+    public function _getEmail() : string { return $this->_sanitizeInput($this->_email); }
+
+    /**
+     * @return array
+     */
+    public function _getPerms() : array { return $this->_perms; }
+}

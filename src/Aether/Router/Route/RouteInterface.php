@@ -21,21 +21,29 @@
 */
 declare(strict_types=1);
 
-
-spl_autoload_register(function ($class){
-
-    # - Aether Core
-    if (str_starts_with($class, 'Aether\\')) {
-        $file = __DIR__ . '/src/' . str_replace('\\', '/', $class) . '.php';
-        if (file_exists($file)) require_once $file;
-    }
-
-    # - Custom App Backend
-    if (str_starts_with($class, 'App\\')) {
-        $file = __DIR__ . '/app/' . str_replace('\\', '/', $class) . '.php';
-        if (file_exists($file)) require_once $file;
-    }
-});
+namespace Aether\Router\Route;
 
 
-?>
+interface RouteInterface {
+
+    /**
+     * Get Route's HTTP method
+     *
+     * @return string
+     */
+    public function _getMethod() : string;
+
+    /**
+     * Get Route's name
+     *
+     * @return string
+     */
+    public function _getRoute() : string;
+
+    /**
+     * Get Route's callable function
+     *
+     * @return
+     */
+    public function _getCallable();
+}

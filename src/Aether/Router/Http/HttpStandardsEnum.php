@@ -10,7 +10,7 @@
  *     ╚═╝  ╚═╝╚══════╝   ╚═╝   ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝        ╚═╝     ╚═╝  ╚═╝╚═╝
  *
  *                      The divine lightweight PHP framework
- *                  < 1 Mo • Zero dependencies • Pure PHP 8.3+
+ *                   < 1 Mo • Zero dependencies • Pure PHP 8.3+
  *
  *  Built from scratch. No bloat. POO Embedded.
  *
@@ -21,21 +21,14 @@
 */
 declare(strict_types=1);
 
-
-spl_autoload_register(function ($class){
-
-    # - Aether Core
-    if (str_starts_with($class, 'Aether\\')) {
-        $file = __DIR__ . '/src/' . str_replace('\\', '/', $class) . '.php';
-        if (file_exists($file)) require_once $file;
-    }
-
-    # - Custom App Backend
-    if (str_starts_with($class, 'App\\')) {
-        $file = __DIR__ . '/app/' . str_replace('\\', '/', $class) . '.php';
-        if (file_exists($file)) require_once $file;
-    }
-});
+namespace Aether\Router\Http;
 
 
-?>
+enum HttpStandardsEnum: string {
+
+    case HTTP_GET = 'GET';
+    case HTTP_POST = 'POST';
+    case HTTP_DELETE = 'DELETE';
+    case HTTP_PUT = 'PUT';
+
+}

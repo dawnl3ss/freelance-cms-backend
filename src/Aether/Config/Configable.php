@@ -21,21 +21,26 @@
 */
 declare(strict_types=1);
 
-
-spl_autoload_register(function ($class){
-
-    # - Aether Core
-    if (str_starts_with($class, 'Aether\\')) {
-        $file = __DIR__ . '/src/' . str_replace('\\', '/', $class) . '.php';
-        if (file_exists($file)) require_once $file;
-    }
-
-    # - Custom App Backend
-    if (str_starts_with($class, 'App\\')) {
-        $file = __DIR__ . '/app/' . str_replace('\\', '/', $class) . '.php';
-        if (file_exists($file)) require_once $file;
-    }
-});
+namespace Aether\Config;
 
 
-?>
+interface Configable {
+
+    /**
+     * Transform array to class - usefull if we need to import configuration later on
+     *
+     * @param array $_data
+     *
+     * @return Configable
+     */
+    public function _unpack(array $_data) : Configable;
+
+    /**
+     * Transform class to array - usefull if we need to export configuration later on
+     *
+     * @param Configable $config
+     *
+     * @return array
+     */
+    public function _pack(Configable $config) : array;
+}

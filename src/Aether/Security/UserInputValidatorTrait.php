@@ -21,21 +21,17 @@
 */
 declare(strict_types=1);
 
+namespace Aether\Security;
 
-spl_autoload_register(function ($class){
+trait UserInputValidatorTrait {
 
-    # - Aether Core
-    if (str_starts_with($class, 'Aether\\')) {
-        $file = __DIR__ . '/src/' . str_replace('\\', '/', $class) . '.php';
-        if (file_exists($file)) require_once $file;
+
+    /*
+     * @param string $_str
+     *
+     * @return string
+     */
+    public function _sanitizeInput(string $_str) : string {
+        return htmlspecialchars($_str, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
     }
-
-    # - Custom App Backend
-    if (str_starts_with($class, 'App\\')) {
-        $file = __DIR__ . '/app/' . str_replace('\\', '/', $class) . '.php';
-        if (file_exists($file)) require_once $file;
-    }
-});
-
-
-?>
+}

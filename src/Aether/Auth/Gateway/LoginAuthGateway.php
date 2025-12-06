@@ -21,21 +21,59 @@
 */
 declare(strict_types=1);
 
+namespace Aether\Auth\Gateway;
 
-spl_autoload_register(function ($class){
+use Aether\Auth\AuthInstance;
+use Aether\Auth\User\UserInstance;
+use Aether\Auth\Security\PasswordHashingTrait;
+use Aether\Config\ProjectConfig;
 
-    # - Aether Core
-    if (str_starts_with($class, 'Aether\\')) {
-        $file = __DIR__ . '/src/' . str_replace('\\', '/', $class) . '.php';
-        if (file_exists($file)) require_once $file;
+
+final class LoginAuthGateway extends AuthInstance implements AuthGatewayEventInterface {
+    use PasswordHashingTrait;
+
+    public function __construct(string $_email, string $_password){
+        parent::__construct($_email, $_password);
     }
 
-    # - Custom App Backend
-    if (str_starts_with($class, 'App\\')) {
-        $file = __DIR__ . '/app/' . str_replace('\\', '/', $class) . '.php';
-        if (file_exists($file)) require_once $file;
+    /**
+     * Auth job's purpose : check if provided data are corrects
+     *
+     * @return bool
+     */
+    public function _tryAuth() : bool {
+        if (!$this->_dbconn->_exist(ProjectConfig::AUTH_TABLE_GATEWAY, [ "email" => $this->_email ]))
+            return $this->_setStatus($this->_onFailure(), false);
+
+        $_data = $this->_dbconn->_select(ProjectConfig::AUTH_TABLE_GATEWAY, '*', [ "email" => $this->_email ])[0];
+
+        if (!$this->_checkPassword($this->_password, $_data["password_hash"]))
+            return $this->_setStatus($this->_onFailure(), false);
+
+        return $this->_setStatus($this->_onSuccess($_data), true);
     }
-});
 
+    /***
+     * @param array $_data
+     *
+     * @return string
+     */
+    public function _onSuccess(array $_data) : string {
+        $user_db = $_data;
 
-?>
+        $_SESSION["user"] = serialize(new UserInstance(
+            $user_db["uid"],
+            $user_db["username"],
+            $user_db["email"],
+            $user_db["perms"]
+        ));
+        return "user successfullly logged in.";
+    }
+
+    /**
+     * @return string
+     */
+    public function _onFailure() : string {
+        return "user login failed.";
+    }
+}

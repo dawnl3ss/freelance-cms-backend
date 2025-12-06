@@ -10,7 +10,7 @@
  *     ╚═╝  ╚═╝╚══════╝   ╚═╝   ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝        ╚═╝     ╚═╝  ╚═╝╚═╝
  *
  *                      The divine lightweight PHP framework
- *                  < 1 Mo • Zero dependencies • Pure PHP 8.3+
+ *                   < 1 Mo • Zero dependencies • Pure PHP 8.3+
  *
  *  Built from scratch. No bloat. POO Embedded.
  *
@@ -21,21 +21,40 @@
 */
 declare(strict_types=1);
 
+namespace Aether\Router\Route;
 
-spl_autoload_register(function ($class){
 
-    # - Aether Core
-    if (str_starts_with($class, 'Aether\\')) {
-        $file = __DIR__ . '/src/' . str_replace('\\', '/', $class) . '.php';
-        if (file_exists($file)) require_once $file;
+class Route implements RouteInterface {
+
+    /** @var string $_method */
+    private string $_method;
+
+    /** @var string $_route */
+    private string $_route;
+
+    /** @var $_callable */
+    private $_callable;
+
+
+    public function __construct(string $method, string $route, $callable){
+        $this->_method = $method;
+        $this->_route = $route;
+        $this->_callable = $callable;
     }
 
-    # - Custom App Backend
-    if (str_starts_with($class, 'App\\')) {
-        $file = __DIR__ . '/app/' . str_replace('\\', '/', $class) . '.php';
-        if (file_exists($file)) require_once $file;
-    }
-});
+    /**
+     * @return string
+     */
+    public function _getMethod() : string { return $this->_method; }
 
+    /**
+     * @return string
+     */
+    public function _getRoute() : string {  return $this->_route; }
 
-?>
+    /**
+     * @return
+     */
+    public function _getCallable() { return $this->_callable; }
+
+}

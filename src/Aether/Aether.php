@@ -21,21 +21,18 @@
 */
 declare(strict_types=1);
 
+namespace Aether;
 
-spl_autoload_register(function ($class){
-
-    # - Aether Core
-    if (str_starts_with($class, 'Aether\\')) {
-        $file = __DIR__ . '/src/' . str_replace('\\', '/', $class) . '.php';
-        if (file_exists($file)) require_once $file;
-    }
-
-    # - Custom App Backend
-    if (str_starts_with($class, 'App\\')) {
-        $file = __DIR__ . '/app/' . str_replace('\\', '/', $class) . '.php';
-        if (file_exists($file)) require_once $file;
-    }
-});
-
-
-?>
+/*
+ *
+ * Pure PHP 8.3+ framework built from scratch.
+ *
+ * Wanted a lightweight and fast alternative to other useless-as-hell and huge frameworks.
+ * Easy to incorporate in SaaS, Webapps, REST APIs...
+ *
+ * Made by : Dawnless (Alexandre VOISIN)
+ * → https://dawnless.me
+ * → https://hardware-hub.fr
+ *
+ */
+class Aether {}

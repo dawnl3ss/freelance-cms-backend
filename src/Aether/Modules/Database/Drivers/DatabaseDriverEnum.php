@@ -21,21 +21,13 @@
 */
 declare(strict_types=1);
 
-
-spl_autoload_register(function ($class){
-
-    # - Aether Core
-    if (str_starts_with($class, 'Aether\\')) {
-        $file = __DIR__ . '/src/' . str_replace('\\', '/', $class) . '.php';
-        if (file_exists($file)) require_once $file;
-    }
-
-    # - Custom App Backend
-    if (str_starts_with($class, 'App\\')) {
-        $file = __DIR__ . '/app/' . str_replace('\\', '/', $class) . '.php';
-        if (file_exists($file)) require_once $file;
-    }
-});
+namespace Aether\Modules\Database\Drivers;
 
 
-?>
+enum DatabaseDriverEnum: string {
+
+    case MYSQL = 'mysql';
+    case SQLITE = 'sqlite';
+    case PDO = 'pdo';
+
+}

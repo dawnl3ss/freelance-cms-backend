@@ -21,21 +21,41 @@
 */
 declare(strict_types=1);
 
+namespace Aether\Auth\Gateway;
 
-spl_autoload_register(function ($class){
+use Aether\Auth\AuthInstance;
 
-    # - Aether Core
-    if (str_starts_with($class, 'Aether\\')) {
-        $file = __DIR__ . '/src/' . str_replace('\\', '/', $class) . '.php';
-        if (file_exists($file)) require_once $file;
+
+final class LogoutAuthGateway extends AuthInstance implements AuthGatewayEventInterface {
+
+    public function __construct(){
+        parent::__construct("", "");
     }
 
-    # - Custom App Backend
-    if (str_starts_with($class, 'App\\')) {
-        $file = __DIR__ . '/app/' . str_replace('\\', '/', $class) . '.php';
-        if (file_exists($file)) require_once $file;
+    /**
+     * Auth job's purpose : check if user is already logged out.
+     *
+     * @return bool
+     */
+    public function _tryAuth() : bool {
+        if (!isset($_SESSION["user"]))
+            return $this->_setStatus($this->_onFailure(), false);
+
+        return $this->_setStatus($this->_onSuccess([]), true);
     }
-});
 
+    /***
+     * @param array $_data
+     *
+     * @return string
+     */
+    public function _onSuccess(array $_data) : string {
+        unset($_SESSION["user"]);
+        return "user successfullly logged out.";
+    }
 
-?>
+    /**
+     * @return string
+     */
+    public function _onFailure() : string { return "failed"; }
+}

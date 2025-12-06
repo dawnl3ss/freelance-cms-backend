@@ -21,21 +21,68 @@
 */
 declare(strict_types=1);
 
+namespace Aether\Auth;
 
-spl_autoload_register(function ($class){
+use Aether\Config\ProjectConfig;
+use Aether\Modules\Database\DatabaseWrapper;
 
-    # - Aether Core
-    if (str_starts_with($class, 'Aether\\')) {
-        $file = __DIR__ . '/src/' . str_replace('\\', '/', $class) . '.php';
-        if (file_exists($file)) require_once $file;
+
+abstract class AuthInstance implements AuthInterface {
+
+    /** @var string $_email */
+    protected string $_email;
+
+    /** @var string $_password */
+    protected string $_password;
+
+    /** @var string $_status */
+    protected string $_status;
+
+    /** @var DatabaseWrapper $_dbconn */
+    protected DatabaseWrapper $_dbconn;
+
+    public function __construct(string $email, string $password){
+        $this->_email = $email;
+        $this->_password = $password;
+        $this->_status = "";
+        $this->_dbconn = new DatabaseWrapper(ProjectConfig::AUTH_DATABASE_GATEWAY);
     }
 
-    # - Custom App Backend
-    if (str_starts_with($class, 'App\\')) {
-        $file = __DIR__ . '/app/' . str_replace('\\', '/', $class) . '.php';
-        if (file_exists($file)) require_once $file;
+    /**
+     * @return string
+     */
+    protected function _getEmail() : string { return $this->_email; }
+
+    /**
+     * @return string
+     */
+    protected function _getPassword() : string { return $this->_password; }
+
+
+    /**
+     * @return bool
+     */
+    protected function _isValid() : bool { return $this->_status; }
+
+    /**
+     * @return string
+     */
+    public function _getStatus() : string { return $this->_status; }
+
+    /**
+     * @param string $message
+     * @param bool $status
+     *
+     * @return bool
+     */
+    protected function _setStatus(string $message, bool $status) : bool {
+        $this->_status = $message;
+        return $status;
     }
-});
 
+    /**
+     * @return bool
+     */
+    abstract public function _tryAuth() : bool;
 
-?>
+}

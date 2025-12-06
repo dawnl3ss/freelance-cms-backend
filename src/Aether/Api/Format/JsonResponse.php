@@ -21,21 +21,33 @@
 */
 declare(strict_types=1);
 
+namespace Aether\Api\Format;
 
-spl_autoload_register(function ($class){
 
-    # - Aether Core
-    if (str_starts_with($class, 'Aether\\')) {
-        $file = __DIR__ . '/src/' . str_replace('\\', '/', $class) . '.php';
-        if (file_exists($file)) require_once $file;
+class JsonResponse {
+
+    /** @var array $_json */
+    private array $_json;
+
+    public function __construct(?array $json = []){
+        $this->_json = $json;
     }
 
-    # - Custom App Backend
-    if (str_starts_with($class, 'App\\')) {
-        $file = __DIR__ . '/app/' . str_replace('\\', '/', $class) . '.php';
-        if (file_exists($file)) require_once $file;
+    /**
+     * @param $key
+     *
+     * @param $value
+     *
+     * @return JsonResponse
+     */
+    public function _add($key, $value) : self {
+        $this->_json[$key] = $value;
+        return $this;
     }
-});
 
+    /**
+     * @return string
+     */
+    public function _encode() : string { return json_encode($this->_json); }
 
-?>
+}

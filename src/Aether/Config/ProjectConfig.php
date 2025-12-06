@@ -21,21 +21,38 @@
 */
 declare(strict_types=1);
 
+namespace Aether\Config;
 
-spl_autoload_register(function ($class){
 
-    # - Aether Core
-    if (str_starts_with($class, 'Aether\\')) {
-        $file = __DIR__ . '/src/' . str_replace('\\', '/', $class) . '.php';
-        if (file_exists($file)) require_once $file;
+final class ProjectConfig implements Configable {
+
+    const string PROJECT_NAME = 'Project Name';
+
+    const string DATABASE_ADDRESS = '127.0.0.1';
+    const string DATABASE_USERNAME = 'root';
+    const string DATABASE_PASSWORD = 'root';
+
+    const string AUTH_DATABASE_GATEWAY = "aetherphp";
+    const string AUTH_TABLE_GATEWAY = "users";
+
+    public function __construct(mixed $_data = null){
+        if (!is_null($_data) && $_data instanceof Configable)
+            $this->_unpack($_data);
     }
 
-    # - Custom App Backend
-    if (str_starts_with($class, 'App\\')) {
-        $file = __DIR__ . '/app/' . str_replace('\\', '/', $class) . '.php';
-        if (file_exists($file)) require_once $file;
+    /**
+     * @param array $_data
+     * @return Configable
+     */
+    public function _unpack(array $_data) : Configable {
+        return $this;
     }
-});
 
-
-?>
+    /**
+     * @param Configable $config
+     * @return array
+     */
+    public function _pack(Configable $config) : array {
+        return [];
+    }
+}

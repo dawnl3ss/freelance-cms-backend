@@ -21,21 +21,24 @@
 */
 declare(strict_types=1);
 
-
-spl_autoload_register(function ($class){
-
-    # - Aether Core
-    if (str_starts_with($class, 'Aether\\')) {
-        $file = __DIR__ . '/src/' . str_replace('\\', '/', $class) . '.php';
-        if (file_exists($file)) require_once $file;
-    }
-
-    # - Custom App Backend
-    if (str_starts_with($class, 'App\\')) {
-        $file = __DIR__ . '/app/' . str_replace('\\', '/', $class) . '.php';
-        if (file_exists($file)) require_once $file;
-    }
-});
+namespace Aether\Auth\Gateway;
 
 
-?>
+interface AuthGatewayEventInterface {
+
+    /**
+     * Bind event when auth succeed - Return success message
+     *
+     * @param array $_data
+     *
+     * @return string
+     */
+    public function _onSuccess(array $_data) : string;
+
+    /**
+     * Bind event when auth failed - Return failure message
+     *
+     * @return string
+     */
+    public function _onFailure() : string;
+}

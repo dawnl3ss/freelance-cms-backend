@@ -21,21 +21,31 @@
 */
 declare(strict_types=1);
 
+namespace Aether\Utils;
 
-spl_autoload_register(function ($class){
 
-    # - Aether Core
-    if (str_starts_with($class, 'Aether\\')) {
-        $file = __DIR__ . '/src/' . str_replace('\\', '/', $class) . '.php';
-        if (file_exists($file)) require_once $file;
+final class IdsMap {
+
+    /** @var string $_login */
+    private string $_login;
+
+    /** @var string $_keypass */
+    private string $_keypass;
+
+    public function __construct(string $login, string $keypass){
+        $this->_login = $login;
+        $this->_keypass = $keypass;
     }
 
-    # - Custom App Backend
-    if (str_starts_with($class, 'App\\')) {
-        $file = __DIR__ . '/app/' . str_replace('\\', '/', $class) . '.php';
-        if (file_exists($file)) require_once $file;
-    }
-});
 
+    /**
+     * @return string
+     */
+    public function _getLogin() : string { return $this->_login; }
 
-?>
+    /**
+     * @return string
+     */
+    public function _getPasskey() : string { return $this->_keypass; }
+
+}

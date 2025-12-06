@@ -45,4 +45,4 @@ session_start();
 require_once __DIR__ . '/autoload.php';
 
 # - Router Gateway : deliver correct controller for each route
-(new \router\ControllerGateway())->_link();
+(new \Aether\Router\ControllerGateway())->_link();

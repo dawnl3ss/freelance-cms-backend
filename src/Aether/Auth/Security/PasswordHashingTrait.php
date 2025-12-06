@@ -21,21 +21,28 @@
 */
 declare(strict_types=1);
 
+namespace Aether\Auth\Security;
 
-spl_autoload_register(function ($class){
 
-    # - Aether Core
-    if (str_starts_with($class, 'Aether\\')) {
-        $file = __DIR__ . '/src/' . str_replace('\\', '/', $class) . '.php';
-        if (file_exists($file)) require_once $file;
+trait PasswordHashingTrait {
+
+    /**
+     * @param string $password
+     *
+     * @return string
+     */
+    public function _hashPassword(string $password) : string {
+        return password_hash($password, PASSWORD_ARGON2ID);
     }
 
-    # - Custom App Backend
-    if (str_starts_with($class, 'App\\')) {
-        $file = __DIR__ . '/app/' . str_replace('\\', '/', $class) . '.php';
-        if (file_exists($file)) require_once $file;
+    /**
+     * @param string $password
+     *
+     * @param string $hash
+     *
+     * @return bool
+     */
+    function _checkPassword(string $password, string $hash) : bool {
+        return password_verify($password, $hash);
     }
-});
-
-
-?>
+}

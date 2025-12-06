@@ -21,21 +21,30 @@
 */
 declare(strict_types=1);
 
+namespace App\Controller;
 
-spl_autoload_register(function ($class){
+use Aether\Auth\User\UserInstance;
 
-    # - Aether Core
-    if (str_starts_with($class, 'Aether\\')) {
-        $file = __DIR__ . '/src/' . str_replace('\\', '/', $class) . '.php';
-        if (file_exists($file)) require_once $file;
+
+class AppController {
+
+    /**
+     * [@method] => GET
+     * [@route] => /
+     */
+    public function index(){
+        echo "Homepage demo for automated Router/Controller<br>";
+        var_dump(UserInstance::_isLoggedIn());
     }
 
-    # - Custom App Backend
-    if (str_starts_with($class, 'App\\')) {
-        $file = __DIR__ . '/app/' . str_replace('\\', '/', $class) . '.php';
-        if (file_exists($file)) require_once $file;
+    /**
+     * [@method] => GET
+     * [@route] => /test
+     */
+    public function test(){
+        echo "<pre>";
+        echo "kjlsdqd";
+        echo "</pre>";
     }
-});
 
-
-?>
+}
